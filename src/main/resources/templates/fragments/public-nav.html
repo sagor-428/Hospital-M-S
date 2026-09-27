@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<body>
+
+<!--
+  Public marketing navbar. Call with:
+    th:replace="~{fragments/public-nav :: nav(active='home')}"
+  active: home | doctors | departments | about | contact
+-->
+<nav class="navbar navbar-expand-lg navbar-dark site-header" th:fragment="nav(active)">
+
+    <div class="container">
+
+        <a class="navbar-brand brand-mark" th:href="@{/}">
+            <th:block th:replace="~{fragments/icons :: brandMark}"></th:block>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${active == 'home'} ? 'active'" th:href="@{/}">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${active == 'doctors'} ? 'active'"
+                       th:href="@{/doctors}">Doctors</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${active == 'departments'} ? 'active'"
+                       th:href="@{/departments}">Departments</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${active == 'about'} ? 'active'"
+                       th:href="@{/about}">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${active == 'contact'} ? 'active'"
+                       th:href="@{/contact}">Contact</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/login}">Login</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="btn btn-primary btn-sm ms-2" th:href="@{/register}">Register</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="btn btn-primary btn-sm ms-lg-2" th:href="@{/dashboard}">My Dashboard</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+</body>
+</html>

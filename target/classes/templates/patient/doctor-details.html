@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Doctor Details | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='PATIENT', active='doctors')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Doctor details</h1>
+                    <p>Review the doctor's profile before booking.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/patient/doctors}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>Back
+                    </a>
+                </div>
+            </div>
+
+            <div class="row justify-content-start">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body p-5">
+
+                            <div class="text-center mb-4">
+                                <div class="avatar-circle mb-3">👨‍⚕️</div>
+                                <h3 th:text="${'Dr. ' + doctor.user.name}">Dr. Doctor Name</h3>
+                                <p class="text-primary fs-5 mb-0" th:text="${doctor.specialization}">Cardiologist</p>
+                            </div>
+
+                            <hr>
+
+                            <div class="row mt-4">
+
+                                <div class="col-md-6 mb-3">
+                                    <strong>Department</strong>
+                                    <p class="text-muted mb-0" th:text="${doctor.department.name}">Cardiology</p>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <strong>Phone</strong>
+                                    <p class="text-muted mb-0" th:text="${doctor.user.phone}">01700000000</p>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <strong>Email</strong>
+                                    <p class="text-muted mb-0" th:text="${doctor.user.email}">doctor@example.com</p>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <strong>Experience</strong>
+                                    <p class="text-muted mb-0"
+                                       th:text="${doctor.experience != null ? doctor.experience + ' years' : 'N/A'}">
+                                        10 years
+                                    </p>
+                                </div>
+
+                                <div class="col-12 mb-3" th:if="${doctor.about != null and !doctor.about.isEmpty()}">
+                                    <strong>About</strong>
+                                    <p class="text-muted mb-0" th:text="${doctor.about}">About the doctor</p>
+                                </div>
+
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <a th:href="@{/patient/doctors}" class="btn btn-outline-secondary me-2">Back</a>
+                                <a th:href="@{/patient/book-appointment(doctorId=${doctor.id})}" class="btn btn-primary">
+                                    Book appointment
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

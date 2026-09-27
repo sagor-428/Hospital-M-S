@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prescription | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='PATIENT', active='appointments')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Prescription</h1>
+                    <p>
+                        Prescription details for your appointment with
+                        <span th:text="${'Dr. ' + appointment.doctor.user.name}">Doctor</span>.
+                    </p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/patient/appointments}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>Back to appointments
+                    </a>
+                </div>
+            </div>
+
+            <!-- APPOINTMENT INFO -->
+            <div class="info-box mb-4">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <strong>Doctor</strong>
+                        <p class="mb-0 text-muted" th:text="${'Dr. ' + appointment.doctor.user.name}">Doctor Name</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Date</strong>
+                        <p class="mb-0 text-muted" th:text="${appointment.appointmentDate}">2026-08-30</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Time</strong>
+                        <p class="mb-0 text-muted" th:text="${appointment.appointmentTime}">10:00</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PRESCRIPTION EXISTS -->
+            <div class="card mb-4" th:if="${prescription != null}">
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-2">Diagnosis</h5>
+                    <p class="text-muted" th:text="${prescription.diagnosis}">Diagnosis</p>
+
+                    <div th:if="${prescription.notes != null and !prescription.notes.isEmpty()}">
+                        <h5 class="fw-bold mb-2">Notes</h5>
+                        <p class="text-muted" th:text="${prescription.notes}">Notes</p>
+                    </div>
+
+                    <h5 class="fw-bold mb-3">Medicines</h5>
+
+                    <div class="table-responsive" th:if="${not #lists.isEmpty(prescription.medicines)}">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Medicine</th>
+                                <th>Dosage</th>
+                                <th>Duration</th>
+                                <th>Instructions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="medicine, stat : ${prescription.medicines}">
+                                <td th:text="${stat.count}">1</td>
+                                <td th:text="${medicine.medicineName}">Medicine</td>
+                                <td th:text="${medicine.dosage}">Dosage</td>
+                                <td th:text="${medicine.duration}">Duration</td>
+                                <td th:text="${medicine.instructions}">Instructions</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="text-muted mb-0" th:if="${#lists.isEmpty(prescription.medicines)}">
+                        No medicines were listed on this prescription.
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- NO PRESCRIPTION YET -->
+            <div class="card" th:if="${prescription == null}">
+                <div class="empty-state">
+                    <i class="bi bi-file-earmark-medical"></i>
+                    <h5>No prescription available</h5>
+                    <p class="mb-0">Your doctor hasn't added a prescription for this appointment yet.</p>
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

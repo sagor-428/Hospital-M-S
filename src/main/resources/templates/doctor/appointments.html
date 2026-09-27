@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Appointments | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='DOCTOR', active='appointments')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>My appointments</h1>
+                    <p>Review, accept and manage your patient appointments.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Patient</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="appointment, stat : ${appointments}">
+
+                                <td th:text="${stat.count}">1</td>
+
+                                <td>
+                                    <strong th:text="${appointment.patient.user.name}">Patient Name</strong>
+                                </td>
+
+                                <td th:text="${appointment.appointmentDate}">2026-08-29</td>
+
+                                <td th:text="${appointment.appointmentTime}">10:00</td>
+
+                                <td th:text="${appointment.reason}">Checkup</td>
+
+                                <td>
+                                    <span class="status-pill status-pending"
+                                          th:if="${appointment.status.name() == 'PENDING'}">Pending</span>
+                                    <span class="status-pill status-confirmed"
+                                          th:if="${appointment.status.name() == 'CONFIRMED'}">Confirmed</span>
+                                    <span class="status-pill status-completed"
+                                          th:if="${appointment.status.name() == 'COMPLETED'}">Completed</span>
+                                    <span class="status-pill status-rejected"
+                                          th:if="${appointment.status.name() == 'REJECTED'}">Rejected</span>
+                                    <span class="status-pill status-cancelled"
+                                          th:if="${appointment.status.name() == 'CANCELLED'}">Cancelled</span>
+                                </td>
+
+                                <td class="text-end">
+
+                                    <!-- Pending -->
+                                    <div th:if="${appointment.status.name() == 'PENDING'}" class="d-flex gap-1 justify-content-end">
+
+                                        <form th:action="@{/doctor/appointments/{id}/status(id=${appointment.id})}"
+                                              method="post" class="d-inline">
+                                            <input type="hidden" name="status" value="CONFIRMED">
+                                            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                        </form>
+
+                                        <form th:action="@{/doctor/appointments/{id}/status(id=${appointment.id})}"
+                                              method="post" class="d-inline">
+                                            <input type="hidden" name="status" value="REJECTED">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">Reject</button>
+                                        </form>
+
+                                    </div>
+
+                                    <!-- Confirmed -->
+                                    <div th:if="${appointment.status.name() == 'CONFIRMED'}">
+                                        <form th:action="@{/doctor/appointments/{id}/status(id=${appointment.id})}"
+                                              method="post">
+                                            <input type="hidden" name="status" value="COMPLETED">
+                                            <button type="submit" class="btn btn-primary btn-sm">Mark completed</button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Completed: prescription -->
+                                    <a th:if="${appointment.status.name() == 'COMPLETED'}"
+                                       th:href="@{/doctor/appointments/{id}/prescription(id=${appointment.id})}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Prescription
+                                    </a>
+
+                                    <!-- Rejected / Cancelled -->
+                                    <span th:if="${appointment.status.name() == 'REJECTED' or appointment.status.name() == 'CANCELLED'}"
+                                          class="text-muted small">
+                                        No action
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(appointments)}">
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <i class="bi bi-calendar-x"></i>
+                                        <h5>No appointments found</h5>
+                                        <p class="mb-0">Appointments booked with you will show up here.</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

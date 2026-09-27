@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='PATIENT', active='profile')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>My profile</h1>
+                    <p>Keep your personal details up to date.</p>
+                </div>
+            </div>
+
+            <div class="mb-4 text-center">
+                <div class="avatar-circle mb-2">🧑</div>
+                <h4 class="fw-bold mb-0" th:text="${patient.user.name}">Patient Name</h4>
+                <p class="text-muted" th:text="${patient.user.email}">patient@example.com</p>
+            </div>
+
+            <div th:if="${success}"
+                 class="alert alert-success alert-dismissible fade show"
+                 role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${success}">Updated</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-4">
+
+                    <form th:action="@{/patient/profile}" method="post">
+
+                        <h5 class="fw-bold mb-3">Personal information</h5>
+
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Full name</label>
+                                <input type="text" name="name" class="form-control"
+                                       th:value="${patient.user.name}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Email (cannot be changed)</label>
+                                <input type="email" class="form-control" th:value="${patient.user.email}" disabled>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control"
+                                       th:value="${patient.user.phone}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">New password</label>
+                                <input type="password" name="newPassword" class="form-control"
+                                       placeholder="Leave blank to keep current password">
+                            </div>
+
+                        </div>
+
+
+                        <h5 class="fw-bold mb-3">Personal details</h5>
+
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Date of birth</label>
+                                <input type="date" name="dateOfBirth" class="form-control"
+                                       th:value="${patient.dateOfBirth}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select name="gender" class="form-select">
+                                    <option value="">Select gender</option>
+                                    <option value="MALE"
+                                            th:selected="${patient.gender != null and patient.gender.name() == 'MALE'}">
+                                        Male
+                                    </option>
+                                    <option value="FEMALE"
+                                            th:selected="${patient.gender != null and patient.gender.name() == 'FEMALE'}">
+                                        Female
+                                    </option>
+                                    <option value="OTHER"
+                                            th:selected="${patient.gender != null and patient.gender.name() == 'OTHER'}">
+                                        Other
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Blood group</label>
+                                <input type="text" name="bloodGroup" class="form-control"
+                                       th:value="${patient.bloodGroup}" placeholder="e.g. A+">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Address</label>
+                                <textarea name="address" class="form-control" rows="3"
+                                          th:text="${patient.address}"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-check-circle me-2"></i>Save changes
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

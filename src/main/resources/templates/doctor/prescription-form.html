@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prescription | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+    <style>
+        .medicine-row {
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='DOCTOR', active='appointments')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>
+                        <span th:if="${prescription.id == null}">Write prescription</span>
+                        <span th:if="${prescription.id != null}">Edit prescription</span>
+                    </h1>
+                    <p>Prescription for this patient's appointment.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/doctor/appointments}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>Back to appointments
+                    </a>
+                </div>
+            </div>
+
+            <!-- APPOINTMENT INFO -->
+            <div class="info-box mb-4">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <strong>Patient</strong>
+                        <p class="mb-0 text-muted" th:text="${appointment.patient.user.name}">Patient Name</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Date</strong>
+                        <p class="mb-0 text-muted" th:text="${appointment.appointmentDate}">2026-08-30</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Time</strong>
+                        <p class="mb-0 text-muted" th:text="${appointment.appointmentTime}">10:00</p>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-body p-4">
+
+                    <form th:action="@{/doctor/appointments/{id}/prescription(id=${appointment.id})}"
+                          method="post" id="prescriptionForm">
+
+                        <div class="mb-3">
+                            <label class="form-label">Diagnosis</label>
+                            <textarea name="diagnosis" class="form-control" rows="2"
+                                      th:text="${prescription.diagnosis}"
+                                      placeholder="e.g. Acute viral fever" required></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Notes</label>
+                            <textarea name="notes" class="form-control" rows="2"
+                                      th:text="${prescription.notes}"
+                                      placeholder="Any additional advice for the patient"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">Medicines</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="addMedicineBtn">
+                                <i class="bi bi-plus-circle me-1"></i>Add medicine
+                            </button>
+                        </div>
+
+                        <div id="medicineRows">
+
+                            <div class="medicine-row" th:each="medicine : ${prescription.medicines}">
+                                <div class="row g-2">
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Medicine name</label>
+                                        <input type="text" name="medicineName" class="form-control"
+                                               th:value="${medicine.medicineName}" required>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Dosage</label>
+                                        <input type="text" name="dosage" class="form-control"
+                                               th:value="${medicine.dosage}"
+                                               placeholder="e.g. 1 tablet twice daily">
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label">Duration</label>
+                                        <input type="text" name="duration" class="form-control"
+                                               th:value="${medicine.duration}" placeholder="e.g. 5 days">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Instructions</label>
+                                        <input type="text" name="instructions" class="form-control"
+                                               th:value="${medicine.instructions}" placeholder="e.g. After meals">
+                                    </div>
+
+                                    <div class="col-md-1 d-flex align-items-end">
+                                        <button type="button" class="btn btn-outline-danger w-100"
+                                                onclick="this.closest('.medicine-row').remove()">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- HIDDEN TEMPLATE ROW (cloned by JS) -->
+                        <template id="medicineRowTemplate">
+                            <div class="medicine-row">
+                                <div class="row g-2">
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Medicine name</label>
+                                        <input type="text" name="medicineName" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Dosage</label>
+                                        <input type="text" name="dosage" class="form-control"
+                                               placeholder="e.g. 1 tablet twice daily">
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label">Duration</label>
+                                        <input type="text" name="duration" class="form-control"
+                                               placeholder="e.g. 5 days">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Instructions</label>
+                                        <input type="text" name="instructions" class="form-control"
+                                               placeholder="e.g. After meals">
+                                    </div>
+
+                                    <div class="col-md-1 d-flex align-items-end">
+                                        <button type="button" class="btn btn-outline-danger w-100"
+                                                onclick="this.closest('.medicine-row').remove()">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </template>
+
+                        <div id="noMedicineHint" class="text-muted small mb-3"
+                             th:if="${#lists.isEmpty(prescription.medicines)}">
+                            No medicines added yet. Click "Add medicine" to add one.
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a th:href="@{/doctor/appointments}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-circle me-2"></i>Save prescription
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+<script>
+
+    document.getElementById('addMedicineBtn').addEventListener('click', function () {
+
+        var template = document.getElementById('medicineRowTemplate');
+        var clone = template.content.cloneNode(true);
+
+        document.getElementById('medicineRows').appendChild(clone);
+
+        var hint = document.getElementById('noMedicineHint');
+        if (hint) {
+            hint.style.display = 'none';
+        }
+
+    });
+
+    document.getElementById('prescriptionForm').addEventListener('submit', function (e) {
+
+        var rows = document.querySelectorAll('#medicineRows .medicine-row');
+
+        if (rows.length === 0) {
+            e.preventDefault();
+            alert('Please add at least one medicine before saving.');
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

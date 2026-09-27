@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Rich marketing footer used on the public site -->
+<footer class="site-footer" th:fragment="siteFooter">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-4">
+                <a th:href="@{/}" class="brand-mark">
+                    <th:block th:replace="~{fragments/icons :: brandMark}"></th:block>
+                </a>
+                <p class="mt-3" style="max-width:34ch;">
+                    Connecting patients with trusted doctors across every
+                    department, with simple online booking from anywhere.
+                </p>
+            </div>
+
+            <div class="col-lg-2 col-6">
+                <h6>Explore</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2">
+                    <li><a th:href="@{/}">Home</a></li>
+                    <li><a th:href="@{/doctors}">Doctors</a></li>
+                    <li><a th:href="@{/departments}">Departments</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-2 col-6">
+                <h6>Company</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2">
+                    <li><a th:href="@{/about}">About</a></li>
+                    <li><a th:href="@{/contact}">Contact</a></li>
+                    <li><a th:href="@{/login}">Login</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-4">
+                <h6>Get in touch</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2">
+                    <li><i class="bi bi-geo-alt me-2"></i>123 Health Street, Dhaka, Bangladesh</li>
+                    <li><i class="bi bi-telephone me-2"></i>+880 1700-000000</li>
+                    <li><i class="bi bi-envelope me-2"></i>support@hospital.com</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="d-flex flex-wrap justify-content-between gap-2 fine-print">
+            <span>
+                &copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span>
+                Hospital Management System. All rights reserved.
+            </span>
+            <span>Built for better patient care.</span>
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- Slim, quiet footer used inside the Admin / Doctor / Patient app shell -->
+<footer class="app-footer" th:fragment="dashboardFooter">
+
+    <div class="d-flex flex-wrap justify-content-between gap-2">
+        <span>
+            &copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span>
+            Hospital Management System
+        </span>
+        <span>All patient data is handled confidentially.</span>
+    </div>
+
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Departments | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='ADMIN', active='departments')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div th:if="${error}"
+                 class="alert alert-danger alert-dismissible fade show"
+                 role="alert">
+                <span th:text="${error}">Error message</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="page-header">
+                <div>
+                    <h1>Departments</h1>
+                    <p>Create and manage the departments doctors belong to.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/admin/departments/add}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i> Add department
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="department : ${departments}">
+
+                                <td th:text="${department.id}">1</td>
+
+                                <td th:text="${department.name}">Cardiology</td>
+
+                                <td class="text-end">
+                                    <form th:action="@{/admin/departments/delete/{id}(id=${department.id})}"
+                                          method="post" class="d-inline">
+                                        <button class="btn btn-sm btn-outline-danger" type="submit"
+                                                onclick="return confirm('Delete this department?');">
+                                            <i class="bi bi-trash me-1"></i>Delete
+                                        </button>
+                                    </form>
+                                </td>
+
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(departments)}">
+                                <td colspan="3">
+                                    <div class="empty-state">
+                                        <i class="bi bi-diagram-3"></i>
+                                        <h5>No departments yet</h5>
+                                        <p class="mb-0">Add your first department to get started.</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

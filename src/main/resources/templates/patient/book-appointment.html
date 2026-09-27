@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Appointment | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='PATIENT', active='doctors')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Book appointment</h1>
+                    <p>Select a date and choose an available time slot.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/patient/doctors}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Back to doctors
+                    </a>
+                </div>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span th:text="${error}">Error</span>
+            </div>
+
+            <div class="row justify-content-start">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body p-4">
+
+                            <!-- DOCTOR -->
+                            <div class="info-box mb-4">
+                                <h5 class="fw-bold" th:text="${'Dr. ' + doctor.user.name}">Doctor Name</h5>
+                                <p class="mb-1 text-muted" th:text="${doctor.specialization}">Specialization</p>
+                                <p class="mb-0 text-muted" th:if="${doctor.department != null}"
+                                   th:text="${doctor.department.name}">Department</p>
+                            </div>
+
+                            <!-- DATE FORM -->
+                            <form th:action="@{/patient/available-slots}" method="get" class="mb-4">
+
+                                <input type="hidden" name="doctorId" th:value="${doctor.id}">
+
+                                <div class="row align-items-end">
+
+                                    <div class="col-md-8">
+                                        <label class="form-label">Appointment date</label>
+                                        <input type="date" name="date" class="form-control"
+                                               th:value="${selectedDate}" required>
+                                    </div>
+
+                                    <div class="col-md-4 mt-3 mt-md-0">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="bi bi-search me-2"></i>Show available slots
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <hr>
+
+                            <!-- BOOK FORM -->
+                            <form th:action="@{/patient/book-appointment}" method="post">
+
+                                <input type="hidden" name="doctorId" th:value="${doctor.id}">
+                                <input type="hidden" name="appointmentDate" th:value="${selectedDate}">
+
+                                <div class="mb-4">
+                                    <h6 class="fw-semibold mb-3">Available time slots</h6>
+
+                                    <div class="row g-3" th:if="${not #lists.isEmpty(availableSlots)}">
+                                        <div class="col-auto" th:each="slot, stat : ${availableSlots}">
+                                            <div class="slot-btn">
+                                                <input type="radio" th:id="'slot-' + ${stat.index}"
+                                                       name="appointmentTime" th:value="${slot}" required>
+                                                <label th:for="'slot-' + ${stat.index}" th:text="${slot}">09:00</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-warning mb-0" th:if="${#lists.isEmpty(availableSlots)}">
+                                        <i class="bi bi-calendar-x me-2"></i>
+                                        No available slots for this date. Please choose another date.
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="reason" class="form-label">Reason for visit</label>
+                                    <textarea id="reason" name="reason" class="form-control" rows="4"
+                                              placeholder="Briefly describe your reason for consultation..."></textarea>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a th:href="@{/patient/doctors}" class="btn btn-outline-secondary">Cancel</a>
+                                    <button type="submit" class="btn btn-primary"
+                                            th:disabled="${#lists.isEmpty(availableSlots)}">
+                                        <i class="bi bi-calendar-check me-2"></i>Confirm appointment
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

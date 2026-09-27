@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Role-based sidebar. Call with:
+    th:replace="~{fragments/sidebar :: sidebar(role='ADMIN', active='dashboard')}"
+  role  : ADMIN | DOCTOR | PATIENT
+  active: the current section key, used to highlight the matching link
+-->
+<th:block th:fragment="sidebar(role, active)">
+
+    <div class="sidebar-backdrop"></div>
+
+    <aside class="app-sidebar">
+
+        <div class="sidebar-brand">
+            <a th:href="@{/}" class="brand-mark">
+                <th:block th:replace="~{fragments/icons :: brandMark}"></th:block>
+            </a>
+        </div>
+
+        <div class="sidebar-role"
+             th:text="${role == 'ADMIN'} ? 'Admin console' : (${role == 'DOCTOR'} ? 'Doctor console' : 'Patient portal')">
+            Console
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <!-- ================= ADMIN ================= -->
+            <th:block th:if="${role == 'ADMIN'}">
+
+                <a th:href="@{/admin/dashboard}" class="sidebar-link"
+                   th:classappend="${active == 'dashboard'} ? 'active'">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+
+                <a th:href="@{/admin/departments}" class="sidebar-link"
+                   th:classappend="${active == 'departments'} ? 'active'">
+                    <i class="bi bi-diagram-3"></i> Departments
+                </a>
+
+                <a th:href="@{/admin/doctors}" class="sidebar-link"
+                   th:classappend="${active == 'doctors'} ? 'active'">
+                    <i class="bi bi-people"></i> Doctors
+                </a>
+
+            </th:block>
+
+            <!-- ================= DOCTOR ================= -->
+            <th:block th:if="${role == 'DOCTOR'}">
+
+                <a th:href="@{/doctor/dashboard}" class="sidebar-link"
+                   th:classappend="${active == 'dashboard'} ? 'active'">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+
+                <a th:href="@{/doctor/appointments}" class="sidebar-link"
+                   th:classappend="${active == 'appointments'} ? 'active'">
+                    <i class="bi bi-calendar-check"></i> Appointments
+                </a>
+
+                <a th:href="@{/doctor/schedule}" class="sidebar-link"
+                   th:classappend="${active == 'schedule'} ? 'active'">
+                    <i class="bi bi-calendar-week"></i> Schedule
+                </a>
+
+                <a th:href="@{/doctor/profile}" class="sidebar-link"
+                   th:classappend="${active == 'profile'} ? 'active'">
+                    <i class="bi bi-person-circle"></i> Profile
+                </a>
+
+            </th:block>
+
+            <!-- ================= PATIENT ================= -->
+            <th:block th:if="${role == 'PATIENT'}">
+
+                <a th:href="@{/patient/dashboard}" class="sidebar-link"
+                   th:classappend="${active == 'dashboard'} ? 'active'">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+
+                <a th:href="@{/patient/doctors}" class="sidebar-link"
+                   th:classappend="${active == 'doctors'} ? 'active'">
+                    <i class="bi bi-search"></i> Find a Doctor
+                </a>
+
+                <a th:href="@{/patient/appointments}" class="sidebar-link"
+                   th:classappend="${active == 'appointments'} ? 'active'">
+                    <i class="bi bi-calendar-check"></i> My Appointments
+                </a>
+
+                <a th:href="@{/patient/profile}" class="sidebar-link"
+                   th:classappend="${active == 'profile'} ? 'active'">
+                    <i class="bi bi-person-circle"></i> My Profile
+                </a>
+
+            </th:block>
+
+        </nav>
+
+        <div class="sidebar-foot">
+            <a th:href="@{/}" class="sidebar-link">
+                <i class="bi bi-box-arrow-left"></i> Public site
+            </a>
+        </div>
+
+    </aside>
+
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<body>
+
+<th:block th:fragment="topbar">
+
+    <header class="app-topbar">
+
+        <button type="button" class="sidebar-toggle" data-sidebar-toggle aria-label="Toggle menu">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <div class="topbar-actions">
+
+            <div class="user-chip">
+
+                <span class="user-avatar"
+                      th:text="${#strings.toUpperCase(#strings.substring(#authentication.name,0,1))}">
+                    A
+                </span>
+
+                <span class="user-meta">
+                    <span class="user-email" th:text="${#authentication.name}">user@example.com</span>
+                    <span class="user-role" sec:authorize="hasRole('ADMIN')">Administrator</span>
+                    <span class="user-role" sec:authorize="hasRole('DOCTOR')">Doctor</span>
+                    <span class="user-role" sec:authorize="hasRole('PATIENT')">Patient</span>
+                </span>
+
+            </div>
+
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-box-arrow-right me-1"></i>Logout
+                </button>
+            </form>
+
+        </div>
+
+    </header>
+
+</th:block>
+
+</body>
+</html>

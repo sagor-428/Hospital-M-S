@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Patient Registration | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="auth-shell">
+
+    <aside class="auth-aside">
+
+        <a th:href="@{/}" class="brand-mark">
+            <th:block th:replace="~{fragments/icons :: brandMark}"></th:block>
+        </a>
+
+        <div>
+            <h2>Create your patient account.</h2>
+            <p>
+                Registration takes less than two minutes. Once you're in,
+                you can search doctors, book appointments and keep every
+                visit on record.
+            </p>
+
+            <ul class="aside-features">
+                <li><i class="bi bi-search"></i> Browse doctors by department</li>
+                <li><i class="bi bi-calendar-plus"></i> Book a slot in a few taps</li>
+                <li><i class="bi bi-clock-history"></i> Keep a full visit history</li>
+            </ul>
+        </div>
+
+        <i class="bi bi-heart-pulse hero-mark"></i>
+
+    </aside>
+
+    <div class="auth-form-col wide">
+        <div class="auth-card">
+
+            <h2 class="fw-bold mb-1">Patient registration</h2>
+            <p class="text-muted mb-4">Fill in your details to create an account.</p>
+
+            <form th:action="@{/register}" th:object="${registrationRequest}" method="post">
+
+                <div class="row g-3">
+
+                    <!-- Name -->
+                    <div class="col-md-6">
+                        <label class="form-label">Full name</label>
+                        <input type="text" th:field="*{name}" class="form-control">
+                        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" th:field="*{email}" class="form-control">
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="col-md-6">
+                        <label class="form-label">Password</label>
+                        <input type="password" th:field="*{password}" class="form-control">
+                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input type="text" th:field="*{phone}" class="form-control">
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="col-md-6">
+                        <label class="form-label">Date of birth</label>
+                        <input type="date" th:field="*{dateOfBirth}" class="form-control">
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="col-md-6">
+                        <label class="form-label">Gender</label>
+                        <select th:field="*{gender}" class="form-select">
+                            <option value="">Select gender</option>
+                            <option value="MALE">Male</option>
+                            <option value="FEMALE">Female</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Blood Group -->
+                    <div class="col-md-6">
+                        <label class="form-label">Blood group</label>
+                        <input type="text" th:field="*{bloodGroup}" class="form-control" placeholder="e.g. A+">
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-6">
+                        <label class="form-label">Address</label>
+                        <textarea th:field="*{address}" class="form-control" rows="1"></textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 btn-lg mt-4">Create account</button>
+
+            </form>
+
+            <div class="text-center mt-4">
+                <span class="text-muted">Already have an account?</span>
+                <a th:href="@{/login}" class="fw-semibold">Login</a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

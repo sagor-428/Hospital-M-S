@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Add Doctor | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='ADMIN', active='doctors')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+            <div class="page-header">
+                <div>
+                    <h1>Add new doctor</h1>
+                    <p>This creates both the doctor's login account and their profile.</p>
+                </div>
+            </div>
+
+            <div class="row justify-content-start">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body p-4">
+
+                            <form th:action="@{/admin/doctors/save}" th:object="${doctor}" method="post">
+
+                                <h5 class="fw-bold mb-3">Account information</h5>
+
+                                <div class="row g-3 mb-4">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Full name</label>
+                                        <input type="text" name="name" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" name="email" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Password</label>
+                                        <input type="password" name="password" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" name="phone" class="form-control" required>
+                                    </div>
+
+                                </div>
+
+                                <h5 class="fw-bold mb-3">Professional information</h5>
+
+                                <div class="row g-3 mb-4">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Specialization</label>
+                                        <input type="text" th:field="*{specialization}" class="form-control"
+                                               placeholder="e.g. Cardiologist" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Experience (years)</label>
+                                        <input type="number" th:field="*{experience}" class="form-control" min="0"
+                                               required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Qualification</label>
+                                        <input type="text" th:field="*{qualification}" class="form-control"
+                                               placeholder="e.g. MBBS, FCPS">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Consultation fee</label>
+                                        <input type="number" step="0.01" th:field="*{consultationFee}"
+                                               class="form-control" min="0" placeholder="e.g. 500">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Department</label>
+                                        <select th:field="*{department}" class="form-select" required>
+                                            <option value="">Select department</option>
+                                            <option th:each="department : ${departments}"
+                                                    th:value="${department.id}"
+                                                    th:text="${department.name}"></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">About</label>
+                                        <textarea th:field="*{about}" class="form-control" rows="3"
+                                                  placeholder="Brief professional bio shown to patients"></textarea>
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">Create doctor</button>
+                                    <a th:href="@{/admin/doctors}" class="btn btn-outline-secondary">Cancel</a>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

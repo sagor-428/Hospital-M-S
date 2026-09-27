@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Reusable brand mark: a small amber badge with a pulse-line glyph,
+  paired with the product wordmark. Included wherever the brand
+  appears (sidebar, topbar-less public nav, auth screens, footer).
+-->
+<th:block th:fragment="brandMark">
+    <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="34" height="34" rx="10" fill="#0D6EFD"></rect>
+        <path d="M7 18h4l2.5-6 3 11 2.5-7h5" stroke="#ffffff" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span>Hospital Management System</span>
+</th:block>
+
+</body>
+</html>

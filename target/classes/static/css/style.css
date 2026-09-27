@@ -1,0 +1,982 @@
+/* =====================================================================
+   Hospital Management System — design system
+   Loaded AFTER bootstrap.min.css, so rules here override Bootstrap's
+   defaults (colors, radius, shadows) without needing a Sass rebuild.
+===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- ink & surfaces ---- */
+  --ink: #16231f;
+  --ink-soft: #4c5a56;
+  --ink-faint: #7c8985;
+  --paper: #f3f6f4;
+  --surface: #ffffff;
+  --line: #dfe6e2;
+  --line-soft: #eaf0ed;
+
+  /* ---- brand (matches the project's original blue) ---- */
+  --primary: #0d6efd;
+  --primary-dark: #0a58ca;
+  --primary-light: #e8f0fe;
+  --primary-rgb: 13, 110, 253;
+
+  --accent: #0d6efd;
+  --accent-dark: #0a58ca;
+  --accent-light: #e8f0fe;
+
+  /* ---- status ---- */
+  --status-pending-bg: #fcefd9;
+  --status-pending-fg: #8a5a08;
+  --status-confirmed-bg: #e1f3ea;
+  --status-confirmed-fg: #146c43;
+  --status-completed-bg: #e7ecfb;
+  --status-completed-fg: #3b4fa6;
+  --status-rejected-bg: #fbe7e6;
+  --status-rejected-fg: #a32c22;
+  --status-cancelled-bg: #eef0f0;
+  --status-cancelled-fg: #5b6663;
+
+  /* ---- type ---- */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* ---- shape & elevation ---- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(20, 30, 28, .06), 0 1px 1px rgba(20, 30, 28, .04);
+  --shadow-md: 0 10px 25px rgba(20, 30, 28, .08);
+  --shadow-lg: 0 24px 48px rgba(20, 30, 28, .14);
+
+  --sidebar-w: 264px;
+  --topbar-h: 68px;
+
+  /* Re-point Bootstrap's own primary variable so any component that
+     still reads --bs-primary directly picks up the brand teal too. */
+  --bs-primary: var(--primary);
+  --bs-primary-rgb: var(--primary-rgb);
+  --bs-link-color: var(--primary);
+  --bs-link-hover-color: var(--primary-dark);
+}
+
+/* =====================================================================
+   Base
+===================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+::selection {
+  background: var(--primary);
+  color: #fff;
+}
+
+.text-muted {
+  color: var(--ink-faint) !important;
+}
+
+/* =====================================================================
+   Bootstrap re-tint — brand teal instead of stock Bootstrap blue
+===================================================================== */
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+.btn {
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.btn-lg {
+  border-radius: var(--radius-md);
+}
+
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.badge.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 .2rem rgba(var(--primary-rgb), .15);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: .9rem;
+}
+
+.form-control,
+.form-select {
+  border-color: var(--line);
+  border-radius: var(--radius-sm);
+  min-height: 44px;
+}
+
+textarea.form-control {
+  min-height: unset;
+}
+
+.card {
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.table {
+  color: var(--ink);
+  margin-bottom: 0;
+}
+
+.table thead th {
+  background-color: var(--paper);
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+  padding: .85rem 1rem;
+}
+
+.table td {
+  padding: .85rem 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.table-hover > tbody > tr:hover > * {
+  background-color: var(--primary-light);
+}
+
+/* =====================================================================
+   Status pills — used for appointment / schedule states
+===================================================================== */
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .32rem .7rem;
+  border-radius: var(--radius-pill);
+  font-size: .78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-pending {
+  background: var(--status-pending-bg);
+  color: var(--status-pending-fg);
+}
+
+.status-confirmed {
+  background: var(--status-confirmed-bg);
+  color: var(--status-confirmed-fg);
+}
+
+.status-completed {
+  background: var(--status-completed-bg);
+  color: var(--status-completed-fg);
+}
+
+.status-rejected {
+  background: var(--status-rejected-bg);
+  color: var(--status-rejected-fg);
+}
+
+.status-cancelled {
+  background: var(--status-cancelled-bg);
+  color: var(--status-cancelled-fg);
+}
+
+/* =====================================================================
+   Brand mark — reused in sidebar / topbar / public nav / auth / footer
+===================================================================== */
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: inherit;
+  text-decoration: none;
+  line-height: 1.1;
+}
+
+.brand-mark:hover {
+  color: inherit;
+}
+
+.brand-mark svg {
+  flex: none;
+  width: 34px;
+  height: 34px;
+}
+
+/* =====================================================================
+   App shell — sidebar + topbar layout for Admin / Doctor / Patient
+===================================================================== */
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: var(--sidebar-w);
+  flex: none;
+  background: var(--ink);
+  color: #dce6e2;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  transition: transform .22s ease;
+}
+
+.sidebar-brand {
+  padding: 1.4rem 1.35rem 1.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.sidebar-brand .brand-mark {
+  color: #fff;
+}
+
+.sidebar-brand .brand-mark small {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: .68rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #8fa39d;
+  margin-top: .15rem;
+}
+
+.sidebar-role {
+  margin: 1rem 1.35rem 0;
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #7f948e;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: .6rem .85rem;
+  overflow-y: auto;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem .85rem;
+  margin-bottom: .15rem;
+  border-radius: var(--radius-sm);
+  color: #c7d6d1;
+  text-decoration: none;
+  font-size: .92rem;
+  font-weight: 500;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.sidebar-link i {
+  font-size: 1.05rem;
+  width: 1.3rem;
+  text-align: center;
+  color: #7f948e;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, .06);
+  color: #fff;
+}
+
+.sidebar-link.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.sidebar-link.active i {
+  color: #fff;
+}
+
+.sidebar-foot {
+  padding: .85rem;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+}
+
+/* topbar */
+
+.app-topbar {
+  height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1010;
+}
+
+.sidebar-toggle {
+  display: none;
+  border: none;
+  background: none;
+  font-size: 1.4rem;
+  color: var(--ink);
+  padding: .25rem .4rem;
+  line-height: 1;
+}
+
+.topbar-label {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  margin-left: auto;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: .95rem;
+  text-transform: uppercase;
+  flex: none;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.user-meta .user-email {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--ink);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-meta .user-role {
+  font-size: .72rem;
+  color: var(--ink-faint);
+  text-transform: capitalize;
+}
+
+/* main column */
+
+.app-main {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+  padding: 2rem 2rem 1rem;
+  max-width: 1280px;
+  width: 100%;
+}
+
+.app-footer {
+  padding: 1.25rem 2rem;
+  color: var(--ink-faint);
+  font-size: .82rem;
+  border-top: 1px solid var(--line);
+  margin-top: auto;
+}
+
+/* page header pattern used at the top of dashboard content */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.page-header h1,
+.page-header h2 {
+  font-size: 1.55rem;
+  font-weight: 600;
+  margin-bottom: .2rem;
+}
+
+.page-header p {
+  color: var(--ink-faint);
+  margin-bottom: 0;
+}
+
+.page-header .actions {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+}
+
+/* sidebar overlay for mobile */
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 14, .45);
+  z-index: 1030;
+}
+
+@media (max-width: 991.98px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .app-shell.sidebar-open .app-sidebar {
+    transform: translateX(0);
+  }
+
+  .app-shell.sidebar-open .sidebar-backdrop {
+    display: block;
+  }
+
+  .app-main {
+    margin-left: 0;
+  }
+
+  .sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .app-content {
+    padding: 1.25rem 1rem .5rem;
+  }
+
+  .app-topbar {
+    padding: 0 1rem;
+  }
+
+  .app-footer {
+    padding: 1rem;
+  }
+}
+
+/* =====================================================================
+   Stat cards / info cards (dashboards)
+===================================================================== */
+
+.stat-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-soft);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  padding: 1.35rem 1.5rem;
+  height: 100%;
+}
+
+.stat-card .stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  margin-bottom: .85rem;
+}
+
+.stat-card .stat-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: .3rem;
+}
+
+.stat-card .stat-label {
+  color: var(--ink-faint);
+  font-size: .86rem;
+}
+
+.action-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-soft);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.action-card .action-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.action-card p {
+  color: var(--ink-faint);
+  flex: 1;
+}
+
+.info-box {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.3rem;
+}
+
+.avatar-circle {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  margin: auto;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  color: var(--ink-faint);
+}
+
+.empty-state i {
+  font-size: 2.6rem;
+  color: var(--line);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* =====================================================================
+   Public site — navbar / hero / cards / footer
+===================================================================== */
+
+.site-header {
+  background: var(--ink);
+}
+
+.site-header .navbar-brand {
+  color: #fff;
+}
+
+.site-header .nav-link {
+  color: #c7d6d1;
+  font-weight: 500;
+}
+
+.site-header .nav-link:hover,
+.site-header .nav-link.active {
+  color: #fff;
+}
+
+.hero {
+  background: linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  padding: 5.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero h1 {
+  font-weight: 600;
+  font-size: clamp(2.1rem, 4vw, 3rem);
+}
+
+.hero .lead {
+  color: rgba(255, 255, 255, .88);
+  max-width: 46ch;
+}
+
+.hero-mark {
+  opacity: .16;
+}
+
+/* Decorative glyph pinned to the hero's own box so it can never
+   affect row height or spill into the section below it. */
+.hero-decoration {
+  position: absolute;
+  top: 50%;
+  right: -50px;
+  transform: translateY(-50%);
+  font-size: 300px;
+  line-height: 1;
+  color: #fff;
+  opacity: .1;
+  pointer-events: none;
+}
+
+@media (max-width: 991.98px) {
+  .hero-decoration {
+    display: none;
+  }
+}
+
+/* Light band that carries the brand color from the hero into the
+   white content sections below, replacing the old floating cards. */
+.hero-stats {
+  background: var(--primary-light);
+  padding: 3rem 0;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: .3rem;
+}
+
+.section-eyebrow {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: .82rem;
+}
+
+.doctor-card,
+.dept-card,
+.value-card,
+.contact-card {
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform .18s ease, box-shadow .18s ease;
+  height: 100%;
+  background: var(--surface);
+}
+
+.doctor-card:hover,
+.dept-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.doctor-avatar,
+.dept-icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  margin: auto;
+}
+
+.dept-icon {
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+}
+
+.site-footer {
+  background: var(--ink);
+  color: #a9bab4;
+  padding: 3rem 0 1.5rem;
+  margin-top: 3rem;
+}
+
+.site-footer h6 {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: .9rem;
+}
+
+.site-footer a {
+  color: #a9bab4;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: #fff;
+}
+
+.site-footer .brand-mark {
+  color: #fff;
+}
+
+.site-footer hr {
+  border-color: rgba(255, 255, 255, .1);
+  margin: 2rem 0 1.25rem;
+}
+
+.site-footer .fine-print {
+  color: #7f948e;
+  font-size: .82rem;
+}
+
+/* =====================================================================
+   Auth pages (login / register)
+===================================================================== */
+
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+.auth-aside {
+  flex: 1;
+  background: linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-aside .brand-mark {
+  color: #fff;
+}
+
+.auth-aside h2 {
+  font-weight: 600;
+  max-width: 20ch;
+  margin-top: 2.5rem;
+}
+
+.auth-aside p {
+  color: rgba(255, 255, 255, .85);
+  max-width: 38ch;
+}
+
+.auth-aside .aside-features {
+  list-style: none;
+  padding: 0;
+  margin: 1.75rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+}
+
+.auth-aside .aside-features li {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  color: rgba(255, 255, 255, .92);
+  font-size: .92rem;
+}
+
+.auth-aside .aside-features i {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, .12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.auth-aside .hero-mark {
+  position: absolute;
+  right: -40px;
+  bottom: -40px;
+  font-size: 260px;
+  opacity: .1;
+}
+
+.auth-form-col {
+  flex: none;
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  background: var(--paper);
+}
+
+.auth-card {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 2.25rem;
+}
+
+.auth-form-col.wide {
+  max-width: 760px;
+}
+
+.auth-form-col.wide .auth-card {
+  padding: 2.25rem 2.5rem;
+}
+
+@media (max-width: 991.98px) {
+  .auth-aside {
+    display: none;
+  }
+
+  .auth-form-col,
+  .auth-form-col.wide {
+    max-width: 100%;
+  }
+}
+
+/* =====================================================================
+   Misc
+===================================================================== */
+
+.slot-btn label {
+  cursor: pointer;
+  display: block;
+  padding: .65rem .9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  background: var(--surface);
+  font-weight: 500;
+}
+
+.slot-btn input {
+  display: none;
+}
+
+.slot-btn input:checked + label {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.day-badge {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: .4rem .7rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.time-badge {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  padding: .4rem .7rem;
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+}
+
+.slot-badge {
+  background: var(--status-confirmed-bg);
+  color: var(--status-confirmed-fg);
+  padding: .4rem .7rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}

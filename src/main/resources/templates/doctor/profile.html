@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='DOCTOR', active='profile')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>My profile</h1>
+                    <p>Keep your professional details up to date for patients.</p>
+                </div>
+            </div>
+
+            <div class="mb-4 text-center">
+                <div class="avatar-circle mb-2">👨‍⚕️</div>
+                <h4 class="fw-bold mb-0" th:text="${'Dr. ' + doctor.user.name}">Dr. Name</h4>
+                <p class="text-muted" th:text="${doctor.user.email}">doctor@example.com</p>
+            </div>
+
+            <div th:if="${success}"
+                 class="alert alert-success alert-dismissible fade show"
+                 role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${success}">Updated</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-4">
+
+                    <form th:action="@{/doctor/profile}" method="post">
+
+                        <h5 class="fw-bold mb-3">Personal information</h5>
+
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Full name</label>
+                                <input type="text" name="name" class="form-control"
+                                       th:value="${doctor.user.name}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Email (cannot be changed)</label>
+                                <input type="email" class="form-control" th:value="${doctor.user.email}" disabled>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control"
+                                       th:value="${doctor.user.phone}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">New password</label>
+                                <input type="password" name="newPassword" class="form-control"
+                                       placeholder="Leave blank to keep current password">
+                            </div>
+
+                        </div>
+
+
+                        <h5 class="fw-bold mb-3">Professional information</h5>
+
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Specialization</label>
+                                <input type="text" name="specialization" class="form-control"
+                                       th:value="${doctor.specialization}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Qualification</label>
+                                <input type="text" name="qualification" class="form-control"
+                                       th:value="${doctor.qualification}" placeholder="e.g. MBBS, FCPS">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Experience (years)</label>
+                                <input type="number" name="experience" class="form-control"
+                                       th:value="${doctor.experience}" min="0">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Consultation fee</label>
+                                <input type="number" step="0.01" name="consultationFee" class="form-control"
+                                       th:value="${doctor.consultationFee}" min="0">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">About</label>
+                                <textarea name="about" class="form-control" rows="4"
+                                          th:text="${doctor.about}"
+                                          placeholder="Brief professional bio shown to patients"></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Department</label>
+                                <input type="text" class="form-control"
+                                       th:value="${doctor.department != null ? doctor.department.name : ''}"
+                                       disabled>
+                                <div class="form-text">Contact an administrator to change your department.</div>
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-check-circle me-2"></i>Save changes
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

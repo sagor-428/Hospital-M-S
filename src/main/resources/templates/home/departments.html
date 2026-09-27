@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Departments | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<th:block th:replace="~{fragments/public-nav :: nav(active='departments')}"></th:block>
+
+<div class="container py-5">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">Our departments</h1>
+        <p class="text-muted mb-0">Explore our specialized departments and the doctors within them.</p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4" th:each="department : ${departments}">
+            <div class="dept-card">
+                <div class="card-body text-center p-4">
+
+                    <div class="dept-icon mb-3 mx-auto"><i class="bi bi-hospital-fill"></i></div>
+
+                    <h5 class="fw-bold" th:text="${department.name}">Department</h5>
+
+                    <p class="text-muted small mb-3"
+                       th:if="${department.description != null and !department.description.isEmpty()}"
+                       th:text="${department.description}">
+                        Description
+                    </p>
+
+                    <a th:href="@{/doctors(departmentId=${department.id})}" class="btn btn-outline-primary btn-sm">
+                        View doctors
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12" th:if="${#lists.isEmpty(departments)}">
+            <div class="empty-state">
+                <i class="bi bi-diagram-3"></i>
+                <h5>No departments found</h5>
+                <p class="mb-0">Please check back later.</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/footer :: siteFooter}"></th:block>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

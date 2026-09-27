@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Find a Doctor | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='PATIENT', active='doctors')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Find a doctor</h1>
+                    <p>Find the right doctor for your appointment.</p>
+                </div>
+            </div>
+
+
+            <!-- Search -->
+            <div class="card mb-4">
+                <div class="card-body">
+
+                    <form th:action="@{/patient/doctors}" method="get">
+                        <div class="row g-3">
+
+                            <div class="col-md-5">
+                                <label class="form-label">Search by specialization</label>
+                                <input type="text" name="specialization" th:value="${specialization}"
+                                       class="form-control" placeholder="e.g. Cardiologist">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Department</label>
+                                <select name="departmentId" class="form-select">
+                                    <option value="">All departments</option>
+                                    <option th:each="department : ${departments}"
+                                            th:value="${department.id}"
+                                            th:text="${department.name}"
+                                            th:selected="${selectedDepartment == department.id}"></option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">Search</button>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+
+            <!-- Doctors -->
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4" th:each="doctor : ${doctors}">
+                    <div class="doctor-card">
+                        <div class="card-body text-center">
+
+                            <div class="doctor-avatar mb-3">👨‍⚕️</div>
+
+                            <h5 class="fw-bold" th:text="${'Dr. ' + doctor.user.name}">Dr. Doctor Name</h5>
+                            <p class="text-primary mb-1" th:text="${doctor.specialization}">Cardiologist</p>
+                            <p class="text-muted mb-3" th:text="${doctor.department.name}">Cardiology</p>
+
+                            <a th:href="@{/patient/doctors/{id}(id=${doctor.id})}" class="btn btn-outline-primary">
+                                View profile
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12" th:if="${#lists.isEmpty(doctors)}">
+                    <div class="empty-state">
+                        <i class="bi bi-search"></i>
+                        <h5>No doctors found</h5>
+                        <p class="mb-0">Try another specialization or department.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>

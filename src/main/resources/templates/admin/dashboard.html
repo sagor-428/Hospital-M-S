@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Admin Dashboard | Hospital Management System</title>
+
+    <th:block th:replace="~{fragments/head-assets :: styles}"></th:block>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar(role='ADMIN', active='dashboard')}"></th:block>
+
+    <div class="app-main">
+
+        <th:block th:replace="~{fragments/topbar :: topbar}"></th:block>
+
+        <main class="app-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Admin dashboard</h1>
+                    <p>A quick look at departments, doctors and registered patients.</p>
+                </div>
+            </div>
+
+
+            <div class="row g-4">
+
+                <!-- Departments -->
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="bi bi-diagram-3"></i></div>
+                        <div class="stat-value" th:text="${departmentCount}">0</div>
+                        <div class="stat-label mb-3">Departments</div>
+                        <a th:href="@{/admin/departments}" class="btn btn-primary btn-sm">
+                            Manage departments
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Doctors -->
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="bi bi-people"></i></div>
+                        <div class="stat-value" th:text="${doctorCount}">0</div>
+                        <div class="stat-label mb-3">Doctors</div>
+                        <a th:href="@{/admin/doctors}" class="btn btn-primary btn-sm">
+                            Manage doctors
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Patients -->
+                <div class="col-12">
+                    <div class="stat-card d-flex align-items-center gap-4 flex-wrap">
+                        <div class="stat-icon mb-0"><i class="bi bi-person-heart"></i></div>
+                        <div>
+                            <div class="stat-value mb-0" th:text="${patientCount}">0</div>
+                            <div class="stat-label">Registered patients</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: dashboardFooter}"></th:block>
+
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: bootstrapJs}"></th:block>
+
+</body>
+</html>
